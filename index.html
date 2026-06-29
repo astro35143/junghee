@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ज्योतिष — 베다 점성술</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="vedic-astrology.css">
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">ज्योतिष</a>
+  <ul class="nav-links">
+    <li><a href="#kundali">쿤달리</a></li>
+    <li><a href="#horoscope">일일운세</a></li>
+    <li><a href="#knowledge">베다지식</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="mandala-ring">
+    <img src="img/로고.jpg" alt="베다 점성술 로고" class="mandala-logo">
+  </div>
+  <span class="hero-eyebrow">Jyotisha · 빛의 과학</span>
+  <h1>베다 점성술</h1>
+  <p class="hero-sub">Vedic Astrology · ज्योतिष</p>
+  <p>수천 년의 인도 고대 지혜로 당신의 별자리를 읽고, 삶의 방향을 밝혀드립니다.</p>
+  <a href="#kundali" class="btn-gold">출생 차트 계산하기</a>
+  <div class="scroll-hint">
+    <span>아래로</span>
+    <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
+      <path d="M8 0v16M1 10l7 8 7-8" stroke="#c9a84c" stroke-width="1.2"/>
+    </svg>
+  </div>
+</section>
+
+<!-- KUNDALI -->
+<section id="kundali">
+  <div class="section-inner">
+    <span class="section-label">출생 차트</span>
+    <h2 class="section-title">쿤달리 계산기</h2>
+    <div class="divider"></div>
+    <p style="text-align:center; color:var(--muted); margin-bottom: 3rem; font-style:italic;">출생 시간과 장소를 입력하면 당신만의 베다 출생 차트를 계산합니다.</p>
+
+    <div class="kundali-wrap">
+      <div class="kundali-form-side">
+        <h2>정보 입력</h2>
+        <div class="form-group">
+          <label>이름</label>
+          <input type="text" id="k-name" placeholder="이름을 입력하세요">
+        </div>
+        <div class="form-group">
+          <label>생년월일</label>
+          <input type="date" id="k-date">
+        </div>
+        <div class="form-group">
+          <label>출생 시간</label>
+          <input type="time" id="k-time">
+        </div>
+        <div class="form-group">
+          <label>출생 도시</label>
+          <input type="text" id="k-city" placeholder="예: 서울, Seoul, Mumbai">
+        </div>
+        <div class="form-group">
+          <label>성별</label>
+          <select id="k-gender">
+            <option value="">선택하세요</option>
+            <option value="m">남성</option>
+            <option value="f">여성</option>
+          </select>
+        </div>
+        <button class="btn-calculate" onclick="calculateKundali()">✦ 쿤달리 계산하기 ✦</button>
+      </div>
+
+      <div class="kundali-result-side" id="kundali-result" style="display:none;">
+        <h2>출생 차트</h2>
+        <div class="kundali-chart-container">
+          <div class="chart-grid" id="chart-grid"></div>
+          <div class="result-tags" id="result-tags"></div>
+          <div class="interpretation" id="interpretation"></div>
+        </div>
+      </div>
+      <div id="kundali-placeholder" style="display:flex; align-items:center; justify-content:center; opacity:0.2; font-family:'Cinzel Decorative',cursive; color:var(--gold); font-size:4rem; text-align:center; padding:2rem;">
+        ✦
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOROSCOPE -->
+<section id="horoscope">
+  <div class="section-inner">
+    <span class="section-label">일일 운세</span>
+    <h2 class="section-title" style="text-align:center;">오늘의 라시 운세</h2>
+    <div class="divider"></div>
+    <p style="text-align:center; color:var(--muted); font-style:italic; margin-bottom:1rem;">당신의 라시(Moon Sign)를 선택하세요</p>
+
+    <div class="rashi-grid" id="rashi-grid">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div class="horoscope-detail" id="horoscope-detail">
+      <div class="horo-header">
+        <div class="horo-symbol" id="horo-symbol"></div>
+        <div>
+          <div class="horo-title" id="horo-title"></div>
+          <div class="horo-date" id="horo-date"></div>
+        </div>
+      </div>
+      <div class="horo-scores" id="horo-scores"></div>
+      <p class="horo-text" id="horo-text"></p>
+    </div>
+  </div>
+</section>
+
+<!-- KNOWLEDGE -->
+<section id="knowledge">
+  <div class="section-inner">
+    <span class="section-label">베다의 지혜</span>
+    <h2 class="section-title" style="text-align:center;">베다 점성술의 기본 구조</h2>
+    <div class="divider"></div>
+
+    <div class="knowledge-tabs">
+      <button class="tab-btn active" onclick="switchTab('planets')">행성 (Graha)</button>
+      <button class="tab-btn" onclick="switchTab('houses')">하우스 (Bhava)</button>
+      <button class="tab-btn" onclick="switchTab('nakshatras')">나크샤트라</button>
+      <button class="tab-btn" onclick="switchTab('dasha')">다샤 시스템</button>
+    </div>
+
+    <div class="tab-content active" id="tab-planets">
+      <div class="knowledge-item"><h4>☀️ 수리야 (태양)</h4><p>자아, 영혼, 아버지, 권위를 상징합니다. 라시 차트에서 라그나 다음으로 중요한 행성입니다.</p></div>
+      <div class="knowledge-item"><h4>🌙 찬드라 (달)</h4><p>마음, 어머니, 감정, 직관을 지배합니다. 달의 위치(라시)가 일상 운세의 기준이 됩니다.</p></div>
+      <div class="knowledge-item"><h4>🔴 망갈 (화성)</h4><p>에너지, 용기, 형제, 부동산을 상징합니다. 망갈 도샤는 결혼 적합성 판단에 중요합니다.</p></div>
+      <div class="knowledge-item"><h4>💚 부다 (수성)</h4><p>지성, 의사소통, 사업, 기술을 지배합니다. 부다의 위치는 학업과 언어 능력을 나타냅니다.</p></div>
+      <div class="knowledge-item"><h4>🟡 구루 (목성)</h4><p>지혜, 행운, 자녀, 종교의 행성입니다. 베다 점성술에서 가장 길상한 행성으로 여겨집니다.</p></div>
+      <div class="knowledge-item"><h4>⚪ 슈크라 (금성)</h4><p>사랑, 아름다움, 예술, 물질적 쾌락을 상징합니다. 결혼과 로맨스의 카라카(지시자)입니다.</p></div>
+    </div>
+
+    <div class="tab-content" id="tab-houses">
+      <div class="knowledge-item"><h4>제1하우스 — 라그나</h4><p>자아, 외모, 성격, 건강의 집. 상승궁(Ascendant)이 위치하는 가장 중요한 하우스입니다.</p></div>
+      <div class="knowledge-item"><h4>제2하우스 — 다나</h4><p>재산, 가족, 언어, 음식의 집. 물질적 부와 가정환경을 나타냅니다.</p></div>
+      <div class="knowledge-item"><h4>제4하우스 — 수카</h4><p>어머니, 고향, 부동산, 행복의 집. 내면의 평화와 가정 환경을 지배합니다.</p></div>
+      <div class="knowledge-item"><h4>제7하우스 — 칼라트라</h4><p>배우자, 파트너십, 결혼의 집. 관계와 공식적인 파트너를 나타냅니다.</p></div>
+      <div class="knowledge-item"><h4>제10하우스 — 카르마</h4><p>직업, 경력, 명성, 행동의 집. 사회적 지위와 삶의 목적을 보여줍니다.</p></div>
+      <div class="knowledge-item"><h4>제12하우스 — 목샤</h4><p>해탈, 영적 성장, 외국, 손실의 집. 전생 카르마와 영적 해방을 상징합니다.</p></div>
+    </div>
+
+    <div class="tab-content" id="tab-nakshatras">
+      <div class="knowledge-item"><h4>나크샤트라란?</h4><p>달이 하루에 약 13도씩 이동하는 27개의 달 궁(lunar mansion)입니다. 각 나크샤트라는 고유한 에너지와 신성을 가집니다.</p></div>
+      <div class="knowledge-item"><h4>아쉬위니 (Ashwini)</h4><p>첫 번째 나크샤트라. 신속함, 치유, 시작을 상징합니다. 지배 신: 아쉬윈 쌍둥이 신.</p></div>
+      <div class="knowledge-item"><h4>로히니 (Rohini)</h4><p>네 번째 나크샤트라. 풍요, 아름다움, 창의성의 나크샤트라. 달이 가장 편안함을 느끼는 위치입니다.</p></div>
+      <div class="knowledge-item"><h4>아르드라 (Ardra)</h4><p>여섯 번째 나크샤트라. 폭풍, 변화, 파괴 후 재생을 상징. 지배 신: 루드라(시바).</p></div>
+      <div class="knowledge-item"><h4>푸쉬야 (Pushya)</h4><p>가장 길상한 나크샤트라 중 하나. 양육, 풍요, 영적 성장. 중요 행사에 최적의 시간.</p></div>
+      <div class="knowledge-item"><h4>나크샤트라 다샤</h4><p>빔쇼타리 다샤 시스템은 출생 시 달의 나크샤트라를 기준으로 120년 주기의 행성 기간을 계산합니다.</p></div>
+    </div>
+
+    <div class="tab-content" id="tab-dasha">
+      <div class="knowledge-item"><h4>빔쇼타리 다샤란?</h4><p>베다 점성술의 핵심 시간 예측 시스템. 9개 행성이 120년 주기로 각각의 기간을 지배합니다.</p></div>
+      <div class="knowledge-item"><h4>수리야 다샤 (6년)</h4><p>태양이 지배하는 6년 기간. 자아 발견, 권위, 아버지와의 관계, 건강이 중심 주제.</p></div>
+      <div class="knowledge-item"><h4>찬드라 다샤 (10년)</h4><p>달이 지배하는 10년 기간. 감정, 어머니, 직관, 대중과의 관계가 중요해집니다.</p></div>
+      <div class="knowledge-item"><h4>구루 다샤 (16년)</h4><p>목성이 지배하는 16년 기간. 가장 길상한 다샤 중 하나. 지혜, 성장, 영적 발전의 시기.</p></div>
+      <div class="knowledge-item"><h4>샤니 다샤 (19년)</h4><p>토성이 지배하는 19년 기간. 카르마 정산의 시간. 인내와 규율을 통한 성장이 요구됩니다.</p></div>
+      <div class="knowledge-item"><h4>안타르 다샤</h4><p>각 마하 다샤(주요 기간) 안에는 9개의 안타르 다샤(부기간)가 존재하며 더 세밀한 예측이 가능합니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">ज्योतिष</span>
+  <p class="footer-tagline">빛의 과학으로 삶의 길을 밝히다</p>
+  <ul class="footer-links">
+    <li><a href="#kundali">쿤달리</a></li>
+    <li><a href="#horoscope">일일운세</a></li>
+    <li><a href="#knowledge">베다지식</a></li>
+    <li><a href="#">개인정보처리방침</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 ज्योतिष Vedic Astrology. 모든 권리 보유.</p>
+</footer>
+
+</script>
+</body>
+</html>
